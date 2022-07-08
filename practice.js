@@ -1,19 +1,19 @@
 // Responsables de los cuarteles
-const paddockManagers = [
-    { id: 1, taxNumber: '132254524', name: 'JUAN TAPIA BURGOS' },
-    { id: 2, taxNumber: '143618668', name: 'EFRAIN SOTO VERA' },
-    { id: 3, taxNumber: '78903228', name: 'CARLOS PEREZ GONZALEZ' },
-    { id: 4, taxNumber: '176812737', name: 'ANDRES VIÑALES CIENFUEGOS' },
-    { id: 5, taxNumber: '216352696', name: 'OSCAR PEREZ ZUÑIGA' },
-    { id: 6, taxNumber: '78684747', name: 'JOAQUIN ANDRADE SANDOVAL' }
+const paddockManagers = [ 
+{ id: 1, taxNumber: '132254524', name: 'JUAN TAPIA BURGOS' },
+{ id: 2, taxNumber: '143618668', name: 'EFRAIN SOTO VERA' },
+{ id: 3, taxNumber: '78903228', name: 'CARLOS PEREZ GONZALEZ' },
+{ id: 4, taxNumber: '176812737', name: 'ANDRES VIÑALES CIENFUEGOS' },
+{ id: 5, taxNumber: '216352696', name: 'OSCAR PEREZ ZUÑIGA' },
+{ id: 6, taxNumber: '78684747', name: 'JOAQUIN ANDRADE SANDOVAL' }
 ];
 
 // Tipo de cuartel, en el cual se utiliza el tipo de producto plantado
 const paddockType = [
-    { id: 1, name: 'PALTOS' },
-    { id: 2, name: 'AVELLANOS' },
-    { id: 3, name: 'CEREZAS' },
-    { id: 4, name: 'NOGALES' },
+    { id: 1, name: 'PALTOS' }, // 0
+    { id: 2, name: 'AVELLANOS' }, // 1
+    { id: 3, name: 'CEREZAS' }, // 2
+    { id: 4, name: 'NOGALES' }, // 3
 ]
 
 // Un paddock representa un cuartel de un campo (Entiéndase también como potrero o parcela), el área está representada en m2, harvestYear es el año en el que se sembró el cuartel
@@ -60,22 +60,68 @@ function listPaddockManagerIds() {
 function listPaddockManagersByName() {
     // console.log('a' > 'b') false
     // console.log('a' < 'b') true
-    let temp = 0
-    for(let i = 0; i < paddockManagers.length -1 ; i++){
-        if(paddockManagers[i].name[0] >  paddockManagers[i+1].name[0]){
-            temp = paddockManagers[i]
-            paddockManagers[i] = paddockManagers[i+1]
-            paddockManagers[i+1] = temp
+    // console.log('A'.charCodeAt(0))
+    // console.log('B'.charCodeAt(0))
+    const managersOrderedByName = [...paddockManagers]
+    let temp;
+    for(let i = 0; i < managersOrderedByName.length; i++){
+        for(let j = 0; j < managersOrderedByName.length - i - 1; j++){
+    //         // swap
+                console.log(`i: ${i}, j:${j}`)
+                if(managersOrderedByName[j].name.charCodeAt(0) > managersOrderedByName[j+1].name.charCodeAt(0)){
+                    temp = managersOrderedByName[j]
+                    managersOrderedByName[j] =  managersOrderedByName[j+1]
+                    managersOrderedByName[j+1] = temp
+                }
+            else if(managersOrderedByName[j].name.charCodeAt(0) === managersOrderedByName[j+1].name.charCodeAt(0)){
+                for(let k = 1; k < managersOrderedByName[j].name.length; k++){
+                    if(managersOrderedByName[j].name.charCodeAt(k) > managersOrderedByName[j+1].name.charCodeAt(k)){
+                        temp = managersOrderedByName[j]
+                        managersOrderedByName[j] =  managersOrderedByName[j+1]
+                        managersOrderedByName[j+1] = temp
+                        break
+                    }
+                }
+            }
         }
-        // console.log(paddockManagers[i].name[0] >  paddockManagers[i+1].name[0])
+        console.log(managersOrderedByName)
     }
-    console.log(paddockManagers)
-
+    return managersOrderedByName;
+    // function compare( a, b ) {
+    //     if ( a.name < b.name ){
+    //       return -1;
+    //     }
+    //     if ( a.name > b.name ){
+    //       return 1;
+    //     }
+    //     return 0;
+    //   }
+    //   const orderedByName = [...paddockManagers]
+    //   orderedByName.sort(compare);
+    //   return orderedByName
 };
 
 // 2 Arreglo con los nombres de cada tipo de cultivo, ordenados decrecientemente por la suma TOTAL de la cantidad de hectáreas plantadas de cada uno de ellos.
 function sortPaddockTypeByTotalArea() {
-
+    const sortedPaddockTypeByTotalArea = paddockType.map((paddock) => ({...paddock, total: 0}))
+    console.log(sortedPaddockTypeByTotalArea)
+    paddocks.forEach((paddock) => {
+        console.log(paddock.paddockTypeId)
+        console.log(paddock.area)
+        sortedPaddockTypeByTotalArea[paddock.paddockTypeId - 1].total = sortedPaddockTypeByTotalArea[paddock.paddockTypeId - 1].total + paddock.area
+    })
+    console.log(sortedPaddockTypeByTotalArea)
+    // let temp;
+    for(let i = 0; i < sortedPaddockTypeByTotalArea.length; i++){
+        for(let j = 0; j < sortedPaddockTypeByTotalArea.length - i - 1; j++){
+            if(sortedPaddockTypeByTotalArea[j].total > sortedPaddockTypeByTotalArea[j+1].total){
+                temp = sortedPaddockTypeByTotalArea[j]
+                sortedPaddockTypeByTotalArea[j] = sortedPaddockTypeByTotalArea[j + 1]
+                sortedPaddockTypeByTotalArea[j + 1] = temp
+            }
+        }
+    }
+    return sortedPaddockTypeByTotalArea;
 }
 
 // 3 Arreglo con los nombres de los administradores, ordenados decrecientemente por la suma TOTAL de hectáreas que administran.
@@ -126,10 +172,12 @@ function paddocksManagers() {
 // Cualquier cambio hará que su prueba quede invalidada automáticamente
 // console.log('Pregunta 0');
 // console.log(listPaddockManagerIds());
-console.log('Pregunta 1');
-console.log(listPaddockManagersByName());
-// console.log('Pregunta 2');
-// console.log(sortPaddockTypeByTotalArea());
+
+// console.log('Pregunta 1');
+// console.log(listPaddockManagersByName());
+
+console.log('Pregunta 2');
+console.log(sortPaddockTypeByTotalArea());
 // console.log('Pregunta 3');
 // console.log(sortFarmManagerByAdminArea());
 // console.log('Pregunta 4');
